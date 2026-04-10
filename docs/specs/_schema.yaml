@@ -1,0 +1,72 @@
+# Spec Frontmatter Schema Reference
+# All spec files use Markdown with this YAML frontmatter structure.
+# Path pattern: docs/specs/{spec-id}/v{N}.md
+
+spec_frontmatter:
+  id:
+    type: string
+    format: kebab-case
+    required: true
+    description: Unique spec identifier
+
+  version:
+    type: integer
+    required: true
+    description: Monotonically increasing version number (1, 2, 3...)
+
+  status:
+    type: string
+    enum: [draft, stable, deprecated]
+    required: true
+    description: |
+      draft      — under development, not yet implemented
+      stable     — implemented and verified, immutable
+      deprecated — superseded by a newer stable version
+
+  previous_version:
+    type: integer | null
+    required: true
+    description: null for v1, integer referencing the prior version otherwise
+
+  created:
+    type: string
+    format: YYYY-MM-DD
+    required: true
+
+  updated:
+    type: string
+    format: YYYY-MM-DD
+    required: true
+
+  author:
+    type: string
+    required: true
+
+  tags:
+    type: array[string]
+    required: false
+    default: []
+
+  depends_on:
+    type: array[object]
+    required: false
+    default: []
+    items:
+      id:
+        type: string
+        description: Referenced spec ID
+      version:
+        type: integer
+        description: Required minimum version
+
+# Body Sections (in order, all required for v2+):
+#
+# ## Current State       — reality before this version
+# ## Changes (from v{N-1}) — diff lines prefixed with ADD: / MODIFY: / REMOVE:
+# ## Target State         — reality after implementation
+# ## Requirements
+#   ### Functional
+#   ### Non-Functional
+# ## Acceptance Criteria  — checklist items (- [ ] format)
+#
+# For v1 specs, "Changes" section is omitted and "Current State" describes the baseline.

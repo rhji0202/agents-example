@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Spec Task File",
+  "description": "Execution units derived from spec version diffs. Path pattern: docs/tasks/{spec-id}-v{N}.json",
+  "type": "object",
+  "required": ["spec_id", "spec_version", "generated_from_diff", "created", "tasks"],
+  "properties": {
+    "spec_id": {
+      "type": "string",
+      "description": "References the spec ID in docs/specs/{spec-id}/"
+    },
+    "spec_version": {
+      "type": "integer",
+      "description": "The target spec version these tasks implement"
+    },
+    "generated_from_diff": {
+      "type": "string",
+      "description": "Human-readable diff reference, e.g. 'v1 -> v2'"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "status", "priority", "source_change", "created"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+-v\\d+-\\d{3}$",
+            "description": "Format: {spec-id}-v{version}-{seq:3}"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "completed", "verified", "blocked", "skipped"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "depends_on": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Task IDs this task depends on"
+          },
+          "estimated_complexity": {
+            "type": "string",
+            "enum": ["trivial", "low", "medium", "high", "complex"]
+          },
+          "source_change": {
+            "type": "string",
+            "description": "The ADD:/MODIFY:/REMOVE: line from the spec diff that spawned this task"
+          },
+          "files_affected": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "File paths affected by this task (populated during planning)"
+          },
+          "prp_plan_path": {
+            "type": ["string", "null"],
+            "description": "Path to the generated PRP plan file"
+          },
+          "created": { "type": "string", "format": "date-time" },
+          "started": { "type": ["string", "null"], "format": "date-time" },
+          "completed": { "type": ["string", "null"], "format": "date-time" },
+          "verified": { "type": ["string", "null"], "format": "date-time" }
+        }
+      }
+    }
+  }
+}
