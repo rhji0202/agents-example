@@ -41,6 +41,8 @@ Every spec MUST contain these sections:
 | API Contracts | CONDITIONAL | Required if API endpoints exist |
 | Dependencies | YES | Listed even if empty |
 | Constraints & Assumptions | YES | Listed even if empty |
+| UI/UX Requirements | CONDITIONAL | Required if user-facing screens exist |
+| Glossary | OPTIONAL | Recommended for domain-specific terms |
 | Changelog | YES | At least 1 entry |
 
 ### 3. Requirement Quality

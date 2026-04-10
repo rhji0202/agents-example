@@ -6,21 +6,9 @@ argument-hint: "[path to planning doc or domain name] (blank = interactive mode)
 # Spec Generation Command (기획서 문서화)
 
 > Orchestrates the spec-driven workflow: analyze → write → validate → generate tasks.
+> Detailed rules for each phase live in the respective agents.
 
 **Input**: $ARGUMENTS
-
----
-
-## Your Role
-
-You are the spec generation orchestrator. You coordinate multiple specialized agents to convert planning documents into structured, versioned specification documents.
-
-**Available agents you MUST use:**
-- `spec-analyzer` — Analyze requirements and identify gaps
-- `spec-writer` — Write the structured spec document
-- `spec-validator` — Validate the completed spec
-- `planner` — Generate task breakdowns from validated specs
-- `architect` — Resolve architectural questions during spec writing
 
 ---
 
@@ -45,96 +33,80 @@ You are the spec generation orchestrator. You coordinate multiple specialized ag
 > 1. **파일 경로** — 기획서 파일이 있으면 경로를 알려주세요
 > 2. **도메인 이름** — 새 스펙을 생성할 도메인 이름을 입력하세요 (예: order, shipping, payment)
 > 3. **직접 입력** — 기획 내용을 직접 설명해 주세요
->
-> Which planning document would you like to convert?
 
 **GATE**: Wait for user response before proceeding.
 
 ---
 
-### Phase 2: ANALYZE — Requirement Extraction
+### Phase 2: ANALYZE
 
-Delegate to **spec-analyzer** agent:
+Delegate to `spec-analyzer` agent with the planning document content.
 
-1. Pass the planning document content
-2. Request structured analysis including:
-   - Extracted requirements (functional + non-functional)
-   - Gap analysis
-   - Conflict check against existing specs
-   - Feasibility assessment
-3. Present the analysis report to the user
+Present the analysis report to the user:
 
-> 📋 **분석 결과 (Analysis Result)**
+> **분석 결과 (Analysis Result)**
 >
 > {analysis summary}
 >
 > 진행하시겠습니까? 수정할 부분이 있으면 알려주세요.
-> Proceed with spec generation? Let me know if anything needs adjustment.
 
 **GATE**: Wait for user confirmation before proceeding.
 
 ---
 
-### Phase 3: WRITE — Spec Generation
+### Phase 3: WRITE
 
-Delegate to **spec-writer** agent:
+Delegate to `spec-writer` agent with:
+- Analysis report from Phase 2
+- Original planning document
+- Version number (new domain → v1, existing → increment)
 
-1. Pass the analysis report and original planning document
-2. Determine version number:
-   - New domain → v1
-   - Existing domain → increment from latest version
-3. Generate the spec at `docs/specs/{domain}.v{N}.md`
-4. Generate state file at `docs/state/{domain}.json`
-5. Log event to `docs/state/{domain}.events.jsonl`
-
----
-
-### Phase 4: VALIDATE — Quality Check
-
-Delegate to **spec-validator** agent:
-
-1. Pass the generated spec path
-2. Run full validation checklist
-3. If FAIL: loop back to spec-writer with failure details
-4. If PASS WITH WARNINGS: show warnings to user
-5. If PASS: proceed to Phase 5
+The agent generates:
+- `docs/specs/{domain}.v{N}.md`
+- `docs/state/{domain}.json`
+- `docs/state/{domain}.events.jsonl`
 
 ---
 
-### Phase 5: TASKS — Generate Implementation Tasks
+### Phase 4: VALIDATE
 
-Delegate to **planner** agent:
+Delegate to `spec-validator` agent with the generated spec path.
 
-1. Read the validated spec
-2. Generate task breakdown at `docs/tasks/{domain}-v{N}.json`
-3. Follow the task schema from `docs/tasks/_schema.json`
-4. Update state file with task counts
+- **FAIL** → pass failure details back to `spec-writer` for correction (auto-retry once)
+- **PASS WITH WARNINGS** → show warnings to user, continue
+- **PASS** → proceed to Phase 5
 
 ---
 
-### Phase 6: SUMMARY — Report
+### Phase 5: TASKS
 
-Present the final summary:
+Delegate to `planner` agent:
+- Read the validated spec
+- Generate `docs/tasks/{domain}-v{N}.json` following `docs/tasks/_schema.json`
+- Update state file with task counts
+
+---
+
+### Phase 6: SUMMARY
 
 ```markdown
-## ✅ Spec Generation Complete
+## Spec Generation Complete
 
 ### Generated Files
-- 📄 Spec: `docs/specs/{domain}.v{N}.md`
-- 📊 State: `docs/state/{domain}.json`
-- 📝 Events: `docs/state/{domain}.events.jsonl`
-- ✅ Tasks: `docs/tasks/{domain}-v{N}.json`
+- Spec: `docs/specs/{domain}.v{N}.md`
+- State: `docs/state/{domain}.json`
+- Events: `docs/state/{domain}.events.jsonl`
+- Tasks: `docs/tasks/{domain}-v{N}.json`
 
 ### Statistics
 - Functional Requirements: {N}
 - Non-Functional Requirements: {N}
 - User Stories: {N}
 - Implementation Tasks: {N}
-- Estimated Complexity: {Low/Medium/High}
 
 ### Next Steps
 1. Review the spec: `docs/specs/{domain}.v{N}.md`
-2. Start implementation: `/prp-implement {domain}`
+2. Publish frontend: `/spec-publish {domain}`
 3. Track progress: check `docs/state/{domain}.json`
 ```
 
@@ -142,14 +114,13 @@ Present the final summary:
 
 ## Error Handling
 
-- If analysis finds critical gaps: pause and ask user for missing information
-- If spec writing fails validation: auto-retry once with corrective context
-- If architectural conflicts detected: delegate to **architect** agent for resolution
-- If user cancels: save partial work as draft
+- Critical gaps in analysis → pause and ask user for missing information
+- Spec validation failure → auto-retry once with corrective context
+- Architectural conflicts → delegate to `architect` agent
+- User cancels → save partial work as draft
 
 ## Related Commands
 
-- `/plan` — General implementation planning
-- `/prp-prd` — PRD generation (more product-focused)
-- `/prp-implement` — Implement from an existing spec
-- `/feature-dev` — Full feature development workflow
+- `/spec-publish` — 스펙 → 프론트엔드 퍼블리싱
+- `/plan` — 구현 계획
+- `/feature-dev` — 기능 개발 워크플로

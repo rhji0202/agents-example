@@ -33,14 +33,25 @@ When creating or updating specs:
 
 ## Required Spec Sections
 
-Every spec MUST include:
+Every spec MUST include (matches `spec-documentation` skill template):
+
+**Required:**
 - [ ] Overview with clear purpose
 - [ ] Problem statement with current state and pain points
 - [ ] Functional requirements with IDs, priorities, and acceptance criteria
 - [ ] Non-functional requirements covering at least performance and security
 - [ ] User stories with acceptance criteria
 - [ ] Dependencies list
+- [ ] Constraints & assumptions
 - [ ] Changelog
+
+**Conditional** (include when the domain has data entities or API endpoints):
+- [ ] Data model with entity definitions and relationships
+- [ ] API contracts with request/response formats
+
+**Optional** (include when helpful):
+- [ ] UI/UX requirements with screens and user flows
+- [ ] Glossary for domain-specific terms
 
 ## Spec Quality Checklist
 
@@ -51,6 +62,12 @@ Before a spec is considered complete:
 - [ ] State file exists and matches spec version
 - [ ] Task file exists with valid task IDs
 - [ ] Schemas validated against `docs/state/_schema.json` and `docs/tasks/_schema.json`
+
+## Timestamp Convention
+
+All timestamps in state files and event logs MUST use KST with explicit offset:
+- Format: `YYYY-MM-DDTHH:MM:SS+09:00` (e.g., `2026-04-10T21:00:00+09:00`)
+- Do NOT use UTC (`Z` suffix) — maintain consistency across all files
 
 ## Version Management
 

@@ -16,6 +16,10 @@ Located in `~/.claude/agents/`:
 | refactor-cleaner | Dead code cleanup | Code maintenance |
 | doc-updater | Documentation | Updating docs |
 | rust-reviewer | Rust code review | Rust projects |
+| spec-analyzer | Spec requirement analysis | Before spec writing (`/spec-gen`) |
+| spec-writer | Spec document generation | After analysis approval |
+| spec-validator | Spec quality check | After spec writing |
+| spec-publisher | Spec → frontend scaffold | Frontend publishing (`/spec-publish`) |
 
 ## Immediate Agent Usage
 

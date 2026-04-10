@@ -158,9 +158,8 @@ frontend/
 │   └── validations/
 │       └── {domain}.ts          ← Zod schemas
 ├── app/
-│   ├── (auth)/{path}/page.tsx   ← Auth pages (login, register)
-│   ├── (user)/{path}/page.tsx   ← Customer pages
-│   └── (admin)/{path}/page.tsx  ← Admin pages
+│   ├── (user)/{path}/page.tsx   ← Customer pages (login, register, order, etc.)
+│   └── (admin)/admin/{path}/page.tsx  ← Admin pages (admin/login, admin/dashboard, etc.)
 └── components/
     ├── auth/                    ← Auth components (LoginForm, RegisterForm)
     ├── user/{feature}/          ← Customer components

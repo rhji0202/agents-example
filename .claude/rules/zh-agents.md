@@ -16,6 +16,10 @@
 | refactor-cleaner | 死代码清理 | 代码维护 |
 | doc-updater | 文档 | 更新文档 |
 | rust-reviewer | Rust 代码审查 | Rust 项目 |
+| spec-analyzer | 스펙 요구사항 분석 | 스펙 작성 전 (`/spec-gen`) |
+| spec-writer | 스펙 문서 생성 | 분석 승인 후 |
+| spec-validator | 스펙 품질 검증 | 스펙 작성 후 |
+| spec-publisher | 스펙 → 프론트엔드 스캐폴드 | 프론트엔드 퍼블리싱 (`/spec-publish`) |
 
 ## 立即使用代理
 

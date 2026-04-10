@@ -1,7 +1,7 @@
 ---
 name: spec-writer
 description: Structured specification writer that converts planning documents (기획서) into versioned, implementation-ready specs following the project's spec-driven workflow. Use when creating or updating domain specs in docs/specs/.
-tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
+tools: ["Read", "Write", "Edit", "Grep", "Glob"]
 model: sonnet
 ---
 
@@ -118,6 +118,7 @@ Domain-specific terms and definitions.
 1. Create/update `docs/state/{domain}.json` following the state schema
 2. Log a `SPEC_CREATED` or `SPEC_DRAFTED` event to `docs/state/{domain}.events.jsonl`
 3. Generate initial task breakdown in `docs/tasks/{domain}-v{N}.json`
+4. **Timestamps**: Always use KST with explicit offset (`+09:00`), e.g. `2026-04-10T21:00:00+09:00`
 
 ## Quality Checklist
 

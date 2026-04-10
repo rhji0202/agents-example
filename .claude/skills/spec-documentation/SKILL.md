@@ -20,16 +20,17 @@ Reference material for converting planning documents into structured, versioned 
 
 ```
 Planning Doc (기획서)
-    ↓ [/spec-gen command]
-Analysis Report
-    ↓ [spec-analyzer agent]
-Draft Spec (v1)
-    ↓ [spec-writer agent]
-Validated Spec
-    ↓ [spec-validator agent]
-State + Tasks
-    ↓ [auto-generated]
+    ↓ /spec-gen orchestrates all steps below
+    ↓
+    ├─ spec-analyzer → Analysis Report
+    ├─ [user confirms]
+    ├─ spec-writer → Draft Spec (v1) + State + Events
+    ├─ spec-validator → Validation Report
+    ├─ planner → Task Breakdown
+    ↓
 Implementation Ready
+    ↓
+    └─ /spec-publish → Frontend Scaffold (types, mocks, components)
 ```
 
 ### State Machine
