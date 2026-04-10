@@ -7,7 +7,7 @@
   "properties": {
     "spec_id": {
       "type": "string",
-      "description": "References the spec ID in docs/specs/{spec-id}/"
+      "description": "References the spec ID in docs/specs/{spec-id}.v{N}.md"
     },
     "spec_version": {
       "type": "integer",

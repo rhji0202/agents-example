@@ -1,0 +1,397 @@
+{
+  "domain_id": "order",
+  "domain_name": "대행신청 (배송대행/구매대행)",
+  "source_file": "대행신청.md",
+  "source_file_lines": 925,
+  "language": "ko",
+  "analyzed_at": "2026-04-10T12:00:00Z",
+
+  "target_file": "docs/specs/order.v1.md",
+
+  "unified_sections": [
+    "개요",
+    "데이터 모델",
+    "사용자 흐름",
+    "화면 구성",
+    "팝업/레이어",
+    "액션 & 인터랙션",
+    "비즈니스 규칙"
+  ],
+
+  "section_mapping": [
+    {
+      "source_heading": "## 개요",
+      "source_lines": [3, 6],
+      "target_section": "개요",
+      "content_type": "metadata",
+      "confidence": "high"
+    },
+    {
+      "source_heading": "## 기능 목적",
+      "source_lines": [8, 10],
+      "target_section": "개요",
+      "content_type": "metadata",
+      "confidence": "high"
+    },
+    {
+      "source_heading": "## 변경 이력",
+      "source_lines": [906, 921],
+      "target_section": "개요",
+      "content_type": "metadata",
+      "confidence": "high",
+      "note": "Change history appended to overview as version tracking metadata"
+    },
+    {
+      "source_heading": "## 화면 흐름도",
+      "source_lines": [12, 73],
+      "target_section": "사용자 흐름",
+      "content_type": "workflow",
+      "confidence": "high",
+      "note": "Contains two ASCII flow diagrams: main menu navigation + one-page form flow"
+    },
+    {
+      "source_heading": "### 1. 접근 방식 (5가지 경로)",
+      "source_lines": [77, 87],
+      "target_section": "사용자 흐름",
+      "content_type": "workflow",
+      "confidence": "high",
+      "note": "Access path table showing 5 entry points and their routing"
+    },
+    {
+      "source_heading": "### 2. One-Page 전체 보기",
+      "source_lines": [89, 93],
+      "target_section": "사용자 흐름",
+      "content_type": "workflow",
+      "confidence": "medium",
+      "note": "Page layout strategy description (scroll, grouping, temp save)"
+    },
+    {
+      "source_heading": "### 3. 물류센터, 운송방식, 수입방식",
+      "source_lines": [94, 117],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Code tables for logistics center (WH001-WH004), shipping method (SEA/AIR), import method (PCE/BS)"
+    },
+    {
+      "source_heading": "### 4. 수취인정보 입력",
+      "source_lines": [118, 123],
+      "target_section": "액션 & 인터랙션",
+      "content_type": "interaction",
+      "confidence": "high",
+      "note": "Address book loading, default address toggle, customs type selection interactions"
+    },
+    {
+      "source_heading": "### 5. 상품정보 입력 (상세)",
+      "source_lines": [125, 158],
+      "target_section": "액션 & 인터랙션",
+      "content_type": "interaction",
+      "confidence": "high",
+      "note": "Mixed: field tables (data_model) + tracking number multi-input (interaction). Primary type is interaction with inline field specs."
+    },
+    {
+      "source_heading": "### 6. 통관유형 자동 설정",
+      "source_lines": [160, 187],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "OR-condition auto-calculation rule: food category / total > $150 / unit price > $150 triggers customs type change"
+    },
+    {
+      "source_heading": "### 7. 요청사항 - 검수사항",
+      "source_lines": [189, 196],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Inspection option enum table with pricing"
+    },
+    {
+      "source_heading": "### 8. 요청사항 - 부가서비스",
+      "source_lines": [197, 211],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Value-added service options with detailed sub-options and pricing (packaging, removal, customs, etc.)"
+    },
+    {
+      "source_heading": "### 9. 화물보험 (가입하기 & 내용확인 - 필수 가입)",
+      "source_lines": [213, 230],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Insurance rules: mandatory enrollment, single type, exclusion conditions, pricing table"
+    },
+    {
+      "source_heading": "### 10. 예치금 자동결제",
+      "source_lines": [231, 236],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "medium",
+      "note": "Deposit auto-payment option table"
+    },
+    {
+      "source_heading": "### 11. 약관동의",
+      "source_lines": [237, 240],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Terms agreement rules: all-agree checkbox behavior, submission condition"
+    },
+    {
+      "source_heading": "## 화면 설계",
+      "source_lines": [243, 244],
+      "target_section": "화면 구성",
+      "content_type": "screen",
+      "confidence": "high",
+      "note": "Section header only"
+    },
+    {
+      "source_heading": "### 접근 버튼 (메인 메뉴)",
+      "source_lines": [245, 260],
+      "target_section": "화면 구성",
+      "content_type": "screen",
+      "confidence": "high",
+      "note": "ASCII wireframe: main menu with 5 service buttons and routing diagram"
+    },
+    {
+      "source_heading": "### 신청서 작성 화면 (One-Page)",
+      "source_lines": [262, 424],
+      "target_section": "화면 구성",
+      "content_type": "screen",
+      "confidence": "high",
+      "note": "Large ASCII wireframe (~160 lines): full one-page form layout with all sections (logistics, recipient, products, options, insurance, payment, terms)"
+    },
+    {
+      "source_heading": "## 팝업/레이어",
+      "source_lines": [428, 429],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high",
+      "note": "Section header only"
+    },
+    {
+      "source_heading": "### 0. 화물보험 가입 & 내용확인 레이어팝업 (필수 가입)",
+      "source_lines": [430, 537],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high",
+      "note": "Largest popup (~107 lines). Contains wireframe + insurance summary/compensation/payment/period tables + interaction rules (confirm click auto-checks insurance). Keep inline together."
+    },
+    {
+      "source_heading": "### 1. 주소록 불러오기 팝업",
+      "source_lines": [540, 557],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high"
+    },
+    {
+      "source_heading": "### 2. 통관품목 검색 팝업",
+      "source_lines": [559, 576],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high"
+    },
+    {
+      "source_heading": "### 3. 재고 불러오기 팝업 (상품 이미지 포함)",
+      "source_lines": [578, 610],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high",
+      "note": "Includes image thumbnails, quantity selection with inventory constraints (0 < qty <= stock), CNY pricing"
+    },
+    {
+      "source_heading": "### 4. 기존 상품정보 불러오기 팝업 (상품 이미지 포함)",
+      "source_lines": [612, 651],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high",
+      "note": "Two sections: recent order products + saved product profiles, both with image/name/price display"
+    },
+    {
+      "source_heading": "### 5. 트래킹번호 추가 레이어 (멀티 추가/삭제)",
+      "source_lines": [653, 678],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high",
+      "note": "Multi-tracking number input layer with carrier dropdown, add/delete actions"
+    },
+    {
+      "source_heading": "### 5-1. 트래킹번호 멀티 입력 동작",
+      "source_lines": [680, 692],
+      "target_section": "액션 & 인터랙션",
+      "content_type": "interaction",
+      "confidence": "high",
+      "note": "Interaction flow diagram: add (max 5), delete (min 1), deferred input checkbox behavior"
+    },
+    {
+      "source_heading": "### 6. 리뷰이벤트 PDF 업로드",
+      "source_lines": [694, 711],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high",
+      "note": "PDF-only file upload popup, max 10MB, drag-and-drop support"
+    },
+    {
+      "source_heading": "### 7. 임시저장 확인 팝업",
+      "source_lines": [713, 725],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high"
+    },
+    {
+      "source_heading": "### 8. 접수신청 확인 팝업",
+      "source_lines": [727, 748],
+      "target_section": "팝업/레이어",
+      "content_type": "popup",
+      "confidence": "high",
+      "note": "Submission confirmation popup: shows summary of order details + checklist before final submit"
+    },
+    {
+      "source_heading": "## 비즈니스 규칙",
+      "source_lines": [752, 753],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Section header only"
+    },
+    {
+      "source_heading": "### 1. 서비스별 접근 경로",
+      "source_lines": [754, 761],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Service routing rules with business-only restrictions for LCL/Coupang"
+    },
+    {
+      "source_heading": "### 2. 필수 입력 항목",
+      "source_lines": [763, 772],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Required fields by category: logistics, recipient, product, requests, insurance, payment, terms"
+    },
+    {
+      "source_heading": "### 3. 입력 제한",
+      "source_lines": [774, 782],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Input constraints: max products (9999), images (5), tracking numbers (5), PDF (10MB), product name (200 chars), weight (>=0.1kg)"
+    },
+    {
+      "source_heading": "### 4. 통관유형 자동 설정",
+      "source_lines": [784, 788],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Condensed customs type auto-set rule table (duplicates section 6 of main features for reference)"
+    },
+    {
+      "source_heading": "### 5. 화물보험",
+      "source_lines": [790, 794],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Insurance applicability rules: delivery/purchase fulfillment only, mandatory, excluded for LCL/Coupang/inventory"
+    },
+    {
+      "source_heading": "### 6. 약관 동의",
+      "source_lines": [796, 798],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high"
+    },
+    {
+      "source_heading": "### 7. 고객사서함 저장",
+      "source_lines": [800, 804],
+      "target_section": "비즈니스 규칙",
+      "content_type": "rule",
+      "confidence": "high",
+      "note": "Post-submission storage rule: save to customer mailbox on successful submission"
+    },
+    {
+      "source_heading": "## 데이터 구조",
+      "source_lines": [808, 809],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Section header only"
+    },
+    {
+      "source_heading": "### 1. 신청서 정보",
+      "source_lines": [810, 819],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Application entity: ID format (FD/PA prefix), mailbox number, service type, logistics fields"
+    },
+    {
+      "source_heading": "### 2. 수취인 정보",
+      "source_lines": [821, 834],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Recipient entity: name, contact, customs type, conditional fields (personal/business customs numbers), address"
+    },
+    {
+      "source_heading": "### 3. 상품 정보",
+      "source_lines": [836, 858],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Product entity: 19 fields including HS code, bilingual names, pricing, images array, tracking numbers array"
+    },
+    {
+      "source_heading": "### 4. 요청사항 정보",
+      "source_lines": [860, 869],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Request options entity: inspection type, service type, multi-select option arrays"
+    },
+    {
+      "source_heading": "### 5. 화물보험 정보",
+      "source_lines": [871, 877],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Insurance entity: agreement boolean, fixed type, premium, terms agreement"
+    },
+    {
+      "source_heading": "### 6. 결제 정보",
+      "source_lines": [879, 882],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high"
+    },
+    {
+      "source_heading": "### 7. 약관 동의",
+      "source_lines": [884, 892],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Terms agreement entity: 4 required + 1 optional + 1 all-agree boolean"
+    },
+    {
+      "source_heading": "### 8. 계산 정보 (자동 산출)",
+      "source_lines": [894, 900],
+      "target_section": "데이터 모델",
+      "content_type": "data_model",
+      "confidence": "high",
+      "note": "Computed fields: total quantity, total amount (CNY), estimated insurance premium (KRW)"
+    }
+  ],
+
+  "cross_cutting": {
+    "shared_enums": [],
+    "shared_policies": [],
+    "existing_domains_scanned": [],
+    "requires_shared_update": false
+  },
+
+  "existing_specs": {
+    "has_previous_version": false,
+    "highest_version": 0,
+    "next_version": 1
+  }
+}
