@@ -1,0 +1,12 @@
+{
+  "spec_id": "order",
+  "current_version": 0,
+  "target_version": 1,
+  "status": "in_progress",
+  "tasks_total": 20,
+  "tasks_completed": 0,
+  "tasks_verified": 0,
+  "tasks_blocked": 0,
+  "last_synced": "2026-04-10T12:00:00Z",
+  "last_verified": null
+}

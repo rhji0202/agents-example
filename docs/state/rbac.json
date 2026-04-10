@@ -1,0 +1,12 @@
+{
+  "spec_id": "rbac",
+  "current_version": 0,
+  "target_version": 1,
+  "status": "in_progress",
+  "tasks_total": 31,
+  "tasks_completed": 0,
+  "tasks_verified": 0,
+  "tasks_blocked": 0,
+  "last_synced": "2026-04-10T21:30:00+09:00",
+  "last_verified": null
+}

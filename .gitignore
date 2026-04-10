@@ -1,0 +1,12 @@
+# Application code — this repo focuses on agent design
+frontend/
+backend/
+
+# OS
+.DS_Store
+
+# Node
+node_modules/
+
+# Environment
+.env*
