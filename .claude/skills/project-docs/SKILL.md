@@ -15,11 +15,17 @@ origin: project
 - "PRD 만들어줘", "아키텍처 잡아줘"
 - 기획서/기획 문서를 공유하며 "이거 정리해줘"
 
-### 도메인 추가/변경
+### 도메인 추가 (대화 모드)
 - "도메인 추가해줘", "brief 만들어줘", "모델 정리해줘"
 - "inbound 도메인 기획하자", "결제 플로우 정리해줘"
+
+### 도메인 변경 — Quick Update (직접 요청 모드)
+- "{domain}에 xx 추가해줘" → 바로 brief/model 수정
+- "{domain} xx 규칙 변경해줘" → Before/After 보여주고 확인
 - "합배송 최대 10개에서 20개로 바꿔줘" (brief 업데이트)
-- "새 필드 추가해야 해" (model 업데이트)
+- "auth에서 비밀번호 찾기 out of scope 빼줘"
+- "order 모델에 xx 필드 추가해줘" (model 업데이트)
+- 도메인명 + 구체적 변경 내용이 있으면 질문 없이 바로 처리
 
 ### 프로젝트 진행 중 문서 동기화
 - 구현 시작/완료 시 → CLAUDE.md Status 업데이트
@@ -27,10 +33,170 @@ origin: project
 - 요구사항 변경 시 → brief 업데이트
 - 새 역할 추가 시 → PERMISSIONS.md 업데이트
 
-### 프로젝트 현황 파악
-- "지금 어디까지 됐어?", "남은 도메인이 뭐야?"
+### 기획 상태 확인 (Status Dashboard)
+- "기획상태 확인해줘", "지금 어디까지 됐어?", "남은 도메인이 뭐야?"
 - "이 도메인 brief 있어?", "모델 정리된 거 맞아?"
-- → CLAUDE.md Domains 테이블 Status 기준으로 답변
+- → 실제 파일 존재 여부를 스캔하여 대시보드 출력
+
+## Quick Update Mode (직접 요청)
+
+기획자가 도메인명 + 변경 내용을 한 줄로 요청하면, 질문 없이 바로 처리한다.
+
+### 인식 패턴
+
+```
+"auth 도메인에 OTP 로그인 추가해줘"
+"order 상태에 on_hold 추가해줘"
+"inbound 금지품목 검사 규칙 변경해줘"
+"payment 환불 수수료 5% → 3%로"
+"auth에서 소셜 로그인 out of scope 빼줘"
+"shipment 화면에 실시간 위치 추적 추가"
+```
+
+핵심: **도메인명이 포함**되고 **구체적 변경 내용**이 있으면 Quick Update.
+
+### Quick Update Flow
+
+```
+1. CLAUDE.md Domains 테이블에서 도메인 → brief/model 파일 매핑
+2. brief + model 읽기
+3. 변경 유형 판별:
+
+   | 요청 유형 | 수정 대상 |
+   |----------|----------|
+   | 플로우/규칙 추가·변경 | brief (Flow, Business Rules) |
+   | 상태 추가·변경 | brief (Status) + model (Status, enum) |
+   | 화면 추가·변경 | brief (Screens) + UI 문서 (있으면) |
+   | 필드 추가·변경 | model (Field table) |
+   | 엔티티 추가 | model (new entity) + _overview.md |
+   | 권한 변경 | PERMISSIONS.md |
+   | Out of Scope 변경 | brief (Out of Scope) |
+   | 도메인 간 규칙 | _cross-domain.md |
+
+4. Before/After 보여주기 (변경된 섹션만)
+5. 연쇄 영향 체크 후 알림:
+   - "이 변경으로 model에 필드 추가가 필요합니다. 함께 반영할까요?"
+   - "PERMISSIONS.md에도 새 action 추가가 필요합니다."
+   - "_cross-domain.md에 영향이 있을 수 있습니다."
+6. 확인 후 저장
+```
+
+### Quick Update vs 대화 모드
+
+| | Quick Update | 대화 모드 |
+|---|---|---|
+| **언제** | 기존 도메인의 부분 수정 | 새 도메인 생성, 대규모 변경 |
+| **질문** | 모호할 때만 (보통 0~1개) | 항상 3~5개 |
+| **출력** | 변경 섹션의 Before/After | 전체 초안 |
+| **확인** | "이렇게 반영할까요?" 1회 | 단계별 확인 |
+
+### 모호한 요청 처리
+
+구체적이지 않으면 최소한의 질문으로 명확화:
+
+```
+기획자: "auth에 알림 추가해줘"
+AI: "어떤 알림인가요? (택1)
+  a) 로그인 시 이메일/SMS 알림
+  b) 비밀번호 변경 알림
+  c) 계정 상태 변경 알림
+  d) 기타 — 설명해주세요"
+```
+
+### Quick Update 예시
+
+```
+기획자: "auth 도메인에 비밀번호 찾기 추가해줘. 이메일 인증 방식으로."
+
+AI:
+📍 auth brief 변경
+
+**Flow 추가:**
+> ### 비밀번호 찾기
+> 1. 고객이 "비밀번호 찾기" 클릭
+> 2. 가입 시 등록한 이메일 입력
+> 3. 인증 코드 발송 (6자리, 유효시간 10분)
+> 4. 인증 코드 입력 → 새 비밀번호 설정
+> 5. 비밀번호 변경 완료 → 로그인 페이지로 이동
+
+**Business Rules 추가:**
+> - 인증 코드: 6자리 숫자, 10분 유효
+> - 1시간 내 최대 5회 요청 제한
+> - 비밀번호 변경 후 기존 세션 전체 만료
+
+**Screens 추가:**
+> | 비밀번호 찾기 | /forgot-password | 이메일 입력, 인증 코드, 새 비밀번호 |
+
+**Out of Scope 제거:**
+> - ~~비밀번호 찾기 (이메일/SMS) — v2~~
+
+📍 auth model 변경
+
+**User 필드 — 변경 없음** (password_hash, password_changed_at 이미 있음)
+
+📍 연쇄 영향
+- notification 도메인: 이메일 발송 연동 필요 → _cross-domain.md 업데이트 권장
+
+이렇게 반영할까요?
+```
+
+## Status Dashboard (기획 상태 확인)
+
+"기획상태 확인해줘", "어디까지 됐어?", "남은 거 뭐야?" 등의 요청 시 실제 파일을 스캔하여 대시보드를 출력한다.
+
+### Status Dashboard Flow
+
+```
+1. CLAUDE.md Domains 테이블 읽기
+2. 실제 파일 존재 여부 스캔:
+   - docs/briefs/{domain}.md → Brief 체크
+   - docs/models/{domain}.md → Model 체크
+   - docs/briefs/{domain}-ui.md → UI 체크
+   - docs/plans/active/{domain}.md → Plan 체크
+   - backend/src/modules/{domain}/ → Backend Code 체크
+   - frontend/app/**/{domain}/ → Frontend Code 체크
+3. CLAUDE.md Status와 실제 상태 불일치 감지
+4. 대시보드 출력
+```
+
+### 출력 형식
+
+```markdown
+## 기획 상태
+
+### 공통 문서
+| 문서 | 상태 |
+|------|------|
+| PRD | OK / 없음 |
+| ARCHITECTURE | OK / 없음 |
+| PERMISSIONS | OK / 없음 |
+| Cross-Domain | OK / 없음 |
+| Model Overview | OK / 없음 |
+
+### 도메인별 상태
+| Domain | Brief | Model | UI | Plan | Code | Status |
+|--------|-------|-------|----|------|------|--------|
+| auth | OK | OK | OK | - | - | planned |
+
+### 불일치 감지 (있을 때만)
+- auth: Status=planned 이지만 코드가 존재함 → in-progress로 변경 권장
+- order: Brief 없음 → Domains 테이블에서 제거하거나 brief 생성 필요
+
+### 다음 단계
+- 구현 시작 가능: {brief+model 완료된 도메인}
+- 문서 보완 필요: {brief 또는 model 없는 도메인}
+```
+
+### 불일치 자동 수정
+
+불일치가 발견되면 수정 여부를 물어본다:
+
+```
+기획자: "기획상태 확인해줘"
+AI: (대시보드 출력 후)
+  ⚠️ 불일치 발견:
+  - auth: 코드가 존재하지만 Status=planned → in-progress로 변경할까요?
+```
 
 ## Scope Boundaries
 
