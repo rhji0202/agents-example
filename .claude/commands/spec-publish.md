@@ -1,5 +1,5 @@
 ---
-description: "Generate TypeScript types, mock data, and frontend components from a spec. Enables frontend publishing without backend."
+description: "Scaffold frontend UI pages and components from a spec's UI/UX requirements."
 argument-hint: "[spec domain name] [page/feature description] (e.g., order 신청서페이지)"
 ---
 
@@ -42,7 +42,7 @@ Pass the following to the `spec-publisher` agent:
 - Any existing frontend patterns already observed
 
 The agent handles all generation internally:
-- Types, fixtures, MSW handlers, API client, components
+- Pages and components (UI/UX only)
 - Scanning existing frontend structure
 - Route group determination
 - File placement decisions
@@ -66,13 +66,12 @@ After the agent completes:
 
 ### 실행 방법
 1. `cd frontend && pnpm dev`
-2. MSW가 콘솔에 "[MSW] Mocking enabled" 출력 확인
-3. 페이지 접근하여 목데이터로 동작 확인
+2. 생성된 페이지 접근하여 UI 구조 확인
 
-### 백엔드 연동 시
-1. MSW 비활성화 (환경변수 또는 코드 제거)
-2. API 클라이언트 URL이 실제 백엔드를 가리키도록 확인
-3. Types는 그대로 유지 (계약 역할)
+### 개발 작업 시
+1. TypeScript 타입 정의
+2. Zod 검증 스키마 추가
+3. API 연동 구현
 ```
 
 ---

@@ -87,6 +87,56 @@ Check `docs/tasks/{domain}-v{N}.json`:
 - [ ] No orphan tasks (tasks without a requirement source)
 - [ ] Dependencies reference existing specs or external systems
 
+### 8. Source Fidelity Check (CRITICAL)
+
+This phase compares the spec against the original planning document to detect dropped content. **This is the most important validation step** — a structurally valid spec that lost half the source data is worse than a messy spec that captured everything.
+
+#### 8.1 Locate the Source
+
+1. Check the spec's Overview section for a "기획서 참조" or source document reference
+2. If a path is given, read the source planning document
+3. If a spec-analyzer report exists (from a prior `/spec-gen` run), use its Source Data Inventory as the baseline
+4. If neither exists, skip this phase and add a WARNING: "Source fidelity not verified — original planning document not found"
+
+#### 8.2 Count Comparison
+
+For each category below, count items in the **source** and in the **spec**, then compute coverage:
+
+```markdown
+| Category | Source Count | Spec Count | Coverage | Status |
+|----------|-------------|------------|----------|--------|
+| Status/State definitions | {N} | {M} | {M/N}% | PASS/FAIL |
+| Table columns (per table) | {N} | {M} | {M/N}% | PASS/FAIL |
+| Buttons/Actions | {N} | {M} | {M/N}% | PASS/FAIL |
+| Popups/Dialogs | {N} | {M} | {M/N}% | PASS/FAIL |
+| Roles defined | {N} | {M} | {M/N}% | PASS/FAIL |
+| Wireframe sections | {N} | {M} | {M/N}% | PASS/FAIL |
+```
+
+**Thresholds:**
+- **≥ 90%** → PASS
+- **70–89%** → WARNING — list missing items
+- **< 70%** → FAIL — spec has significant data loss, must be reworked
+
+#### 8.3 Missing Item Report
+
+For any category below 90% coverage, list the specific items present in the source but absent from the spec:
+
+```markdown
+### Missing Items
+
+**Status definitions (source: 58, spec: 24, coverage: 41%)**:
+- 구매대행: 구매신청, 구매견적, 구매불가, 구매완료 (4 missing)
+- LCL: 작업요청, 작업완료, 국내배송대기, 국내배송완료 (4 missing)
+- 오류: 출고예정, 화물폐기, 통관현안, 체화폐기, 상품분실, 주문수정요청, 보험접수, 보상완료 (8 missing)
+- ...
+
+**Table columns — 주문 목록 (source: 11, spec: 6, coverage: 55%)**:
+- Missing: 묶음/나눔, 트래킹수/입고수, 결제내용/결제금액, 운송장번호/출고일자/마킹번호, 수정일/출고예정일
+```
+
+This report feeds back to **spec-writer** for correction.
+
 ## Output Format
 
 ```markdown
@@ -115,6 +165,15 @@ Check `docs/tasks/{domain}-v{N}.json`:
 - [ ] FAIL: FR-004 has no acceptance criteria
 - [ ] FAIL: Task file schema validation failed: missing "created" field
 
+### SOURCE FIDELITY (Phase 8)
+| Category | Source | Spec | Coverage | Status |
+|----------|--------|------|----------|--------|
+| Statuses | 58 | 24 | 41% | FAIL |
+| Table columns | 21 | 12 | 57% | FAIL |
+| ... | ... | ... | ... | ... |
+
+**Missing Items**: {detailed list from Phase 8.3}
+
 ## Recommendations
 1. Create state file using the spec state schema
 2. Add measurable acceptance criteria to FR-004
@@ -125,9 +184,11 @@ Check `docs/tasks/{domain}-v{N}.json`:
 
 | Level | Meaning | Action |
 |-------|---------|--------|
-| FAIL | Missing required content or broken consistency | Must fix |
-| WARNING | Quality concern but not blocking | Should fix |
+| FAIL | Missing required content, broken consistency, or source coverage < 70% | Must fix |
+| WARNING | Quality concern or source coverage 70–89% | Should fix |
 | INFO | Suggestion for improvement | Optional |
+
+**Note:** A source fidelity FAIL (Phase 8) overrides all other PASS results. A spec that is structurally valid but lost significant source data is NOT acceptable.
 
 ## Coordination
 

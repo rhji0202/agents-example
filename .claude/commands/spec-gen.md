@@ -1,6 +1,6 @@
 ---
 description: "Generate structured specs from planning documents (기획서 → 스펙). Orchestrates analysis, writing, and validation agents."
-argument-hint: "[path to planning doc or domain name] (blank = interactive mode)"
+argument-hint: "[--domain <name>] [path to planning doc or domain name] (blank = interactive mode)"
 ---
 
 # Spec Generation Command (기획서 문서화)
@@ -14,7 +14,67 @@ argument-hint: "[path to planning doc or domain name] (blank = interactive mode)
 
 ## Process
 
-### Phase 1: INPUT — Identify Source
+### Phase 0: PARSE ARGUMENTS
+
+Parse `$ARGUMENTS` for the `--domain` flag:
+
+1. If `$ARGUMENTS` contains `--domain <name>`:
+   - Extract `<name>` as the target domain (kebab-case, singular noun)
+   - Proceed to **Phase 1-D** (domain-targeted mode)
+2. Otherwise:
+   - Proceed to **Phase 1** (legacy mode, unchanged)
+
+---
+
+### Phase 1-D: DOMAIN-TARGETED INPUT
+
+> This phase runs only when `--domain <name>` is provided. It skips interactive mode entirely.
+
+1. Search `docs/specs/` for files matching `{domain}.v*.md`
+2. Search `docs/state/{domain}.json` for current state
+3. Search `docs/tasks/{domain}-v*.json` for existing tasks
+
+**If existing spec found:**
+
+Read the latest version spec and state file, then present:
+
+> **📋 도메인 현황: `{domain}`**
+>
+> | 항목 | 값 |
+> |------|-----|
+> | 최신 버전 | v{N} |
+> | 상태 | {status} |
+> | 태스크 진행 | {tasks_completed}/{tasks_total} |
+>
+> 다음 중 선택하세요:
+> 1. **새 버전 생성** — v{N+1} 스펙을 작성합니다 (기획서를 제공해주세요)
+> 2. **기존 스펙 리뷰** — v{N} 스펙을 검토하고 개선합니다
+> 3. **태스크 재생성** — 현재 스펙으로 태스크를 다시 생성합니다
+
+**GATE**: Wait for user response.
+
+- Option 1 → ask for planning document input, then proceed to Phase 2 with version = N+1
+- Option 2 → load existing spec as input, proceed to Phase 2 (analysis of existing spec)
+- Option 3 → skip to Phase 5 (task generation only) with current spec
+
+**If no existing spec found:**
+
+Check for similar domain names in `docs/specs/` (fuzzy match). If close matches exist, suggest them:
+
+> **`{domain}` 도메인의 스펙이 없습니다.**
+>
+> 유사한 도메인: {similar domains, if any}
+>
+> 새 스펙(v1)을 생성합니다. 기획서를 제공해주세요:
+> - 파일 경로 또는 직접 입력
+
+**GATE**: Wait for user to provide planning document, then proceed to Phase 2 with version = 1.
+
+---
+
+### Phase 1: INPUT — Identify Source (Legacy Mode)
+
+> This phase runs when `--domain` is NOT provided. Behavior is unchanged from before.
 
 **If a file path is provided:**
 1. Read the file at the given path

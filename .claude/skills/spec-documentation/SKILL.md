@@ -30,7 +30,7 @@ Planning Doc (기획서)
     ↓
 Implementation Ready
     ↓
-    └─ /spec-publish → Frontend Scaffold (types, mocks, components)
+    └─ /spec-publish → Frontend Scaffold (pages, components)
 ```
 
 ### State Machine

@@ -23,7 +23,7 @@ Each package has its own `pnpm-lock.yaml`. Run `pnpm install` inside each direct
 agents-example/
 ├── frontend/                  # Next.js 16 App Router
 │   ├── app/                   # App Router pages & layouts
-│   │   ├── layout.tsx         # Root layout (Geist font + MockProvider)
+│   │   ├── layout.tsx         # Root layout
 │   │   ├── page.tsx           # Home page
 │   │   ├── forbidden.tsx      # 403 page
 │   │   ├── globals.css        # Tailwind + CSS variables
@@ -39,19 +39,13 @@ agents-example/
 │   │               └── page.tsx    # /admin — dashboard
 │   ├── components/
 │   │   ├── ui/                # shadcn/ui components
-│   │   ├── auth/              # Auth components (LoginForm, RegisterForm)
 │   │   ├── user/              # Customer feature components
 │   │   ├── admin/             # Admin feature components
-│   │   └── providers/         # Context providers (MockProvider)
 │   ├── hooks/                 # Custom React hooks (@/hooks)
-│   ├── types/                 # TypeScript types from specs
-│   ├── mocks/                 # MSW mock API (dev only)
-│   │   ├── browser.ts         # MSW worker setup
-│   │   ├── handlers/          # Mock API handlers per domain
-│   │   └── fixtures/          # Mock data per domain
+│   ├── stores/                # State management (e.g., Zustand)
 │   ├── lib/
 │   │   ├── utils.ts           # cn() helper (clsx + tailwind-merge)
-│   │   ├── api/               # API clients (client.ts + domain APIs)
+│   │   ├── api/               # API clients (client.ts)
 │   │   └── validations/       # Zod schemas per domain
 │   └── public/                # Static assets
 ├── backend/                   # NestJS 11 API server
