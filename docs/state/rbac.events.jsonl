@@ -1,3 +1,0 @@
-{"timestamp":"2026-04-10T21:30:00+09:00","type":"SPEC_CREATED","spec_id":"rbac","version":1,"description":"RBAC v1 spec created — 5 roles, 41 FRs, 16 NFRs, permission matrix, auth integration"}
-{"timestamp":"2026-04-10T21:30:01+09:00","type":"SPEC_DRAFTED","spec_id":"rbac","version":1,"description":"Draft spec written to docs/specs/rbac.v1.md"}
-{"timestamp":"2026-04-10T21:31:00+09:00","type":"TASKS_GENERATED","spec_id":"rbac","version":1,"task_count":31,"description":"31 implementation tasks generated for RBAC v1"}

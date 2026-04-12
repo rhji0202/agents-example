@@ -1,3 +1,0 @@
-{"timestamp":"2026-04-11T21:00:00+09:00","type":"SPEC_CREATED","spec_id":"agency-management","version":1,"description":"Initial spec created from 대행종합관리.md v5.1.1"}
-{"timestamp":"2026-04-11T22:30:00+09:00","type":"SPEC_DRAFTED","spec_id":"agency-management","version":2,"description":"v2 spec drafted: 15 new FRs (FR-033~047), 6 new USs (US-011~016), BundleShipment/OrderMemo entities, 10 new API endpoints, 3 TBDs resolved"}
-{"timestamp":"2026-04-11T22:45:00+09:00","type":"TASKS_GENERATED","spec_id":"agency-management","version":2,"description":"Generated 32 tasks for v2 implementation: 5 data model, 11 backend API, 14 frontend components, 2 integration tasks"}

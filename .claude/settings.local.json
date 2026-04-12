@@ -47,5 +47,6 @@
       "Bash(find \"E:\\\\project\\\\codebuddy-app\" -type f \\\\\\( -name \"*.js\" -o -name \"*.ts\" \\\\\\) -exec grep -l \"generate.*html\\\\|preview\\\\|HTML\" {} \\\\;)",
       "Bash(start:*)"
     ]
-  }
+  },
+  "spinnerTipsEnabled": true
 }

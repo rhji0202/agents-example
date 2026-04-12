@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HubNext Admin — 로그인</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <div class="login-page">
+    <!-- Left Visual -->
+    <div class="login-visual">
+      <div class="login-visual-content animate-in">
+        <div class="login-visual-logo">Hub<span>Next</span></div>
+        <p class="login-visual-text">
+          중국 현지 물류센터에서 상품 수령·검수·합배송을 처리하는
+          배송대행 관리 시스템
+        </p>
+        <div class="login-visual-features">
+          <div class="login-feature">
+            <div class="login-feature-dot"></div>
+            실시간 입고·출고·배송 추적
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-dot"></div>
+            자동 배송비 계산 및 결제 관리
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-dot"></div>
+            고객·직원·권한 통합 관리
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-dot"></div>
+            측정/검수 데이터 기반 품질 관리
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Form -->
+    <div class="login-form-side">
+      <div class="login-form-wrapper animate-in delay-2">
+        <h1 class="login-form-title">관리자 로그인</h1>
+        <p class="login-form-sub">관리자 계정으로 로그인하세요</p>
+
+        <!-- Error State (hidden by default) -->
+        <div class="alert alert-error" id="loginError" style="display: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          아이디 또는 비밀번호가 올바르지 않습니다
+        </div>
+
+        <form class="login-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="username">아이디</label>
+            <input
+              class="form-input"
+              type="text"
+              id="username"
+              name="username"
+              placeholder="아이디 입력"
+              required
+              minlength="4"
+              maxlength="20"
+              pattern="[a-zA-Z0-9]+"
+              autocomplete="username"
+            >
+            <div class="form-hint">영문+숫자 4~20자</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">비밀번호</label>
+            <input
+              class="form-input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="비밀번호 입력"
+              required
+              minlength="8"
+              autocomplete="current-password"
+            >
+            <div class="form-hint">8자 이상</div>
+          </div>
+
+          <button type="submit" class="login-btn" id="loginBtn">
+            <span class="btn-text">로그인</span>
+            <span class="spinner"></span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const err = document.getElementById('loginError');
+
+      // Loading state
+      btn.classList.add('loading');
+      err.style.display = 'none';
+
+      // Simulate API call
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        // Demo: show error on first attempt, redirect on second
+        if (!window._attempted) {
+          err.style.display = 'flex';
+          window._attempted = true;
+        } else {
+          window.location.href = 'members.html';
+        }
+      }, 1200);
+    }
+  </script>
+</body>
+</html>
