@@ -15,6 +15,7 @@
 | volume_weight_kg | decimal(8,2) | NO | 부피 무게 (계산값) |
 | is_prohibited | boolean | YES | 금지품목 여부 |
 | reject_reason | text | NO | 반려 사유 (금지품목 등) |
+| scan_method | enum(barcode_scan,manual_input,manual_search) | NO | 수령 시 식별 방법 |
 | received_by | uuid | NO | FK → User (물류센터) |
 | received_at | timestamp | NO | 수령일시 |
 | inspected_by | uuid | NO | FK → User (QA) |
