@@ -11,8 +11,13 @@ const exec = promisify(execFile);
  */
 
 async function git(args, cwd) {
-  const { stdout } = await exec('git', args, { cwd });
-  return stdout.trim();
+  try {
+    const { stdout } = await exec('git', args, { cwd });
+    return stdout.trim();
+  } catch (err) {
+    const detail = err.stderr?.trim() || err.stdout?.trim() || err.message;
+    throw new Error(`git ${args[0]} failed: ${detail}`);
+  }
 }
 
 /**
@@ -56,7 +61,11 @@ export async function twoPhaseCommit({ stepNum, stepName, taskName, cwd }) {
   const metaFiles = [];
 
   for (const line of lines) {
-    const file = line.slice(3).trim();
+    let file = line.slice(3).trim();
+    // porcelain v1: renamed/copied files show as "old -> new"
+    if ((line[0] === 'R' || line[0] === 'C') && file.includes(' -> ')) {
+      file = file.slice(file.indexOf(' -> ') + 4);
+    }
     if (file.startsWith('docs/phases/')) {
       metaFiles.push(file);
     } else {
@@ -68,7 +77,7 @@ export async function twoPhaseCommit({ stepNum, stepName, taskName, cwd }) {
   if (codeFiles.length > 0) {
     await git(['add', ...codeFiles], cwd);
     await git(
-      ['commit', '-m', `feat(runway): step ${stepNum} — ${stepName}`],
+      ['commit', '-m', `feat(${taskName}): step ${stepNum} — ${stepName}`],
       cwd
     );
   }
@@ -77,11 +86,7 @@ export async function twoPhaseCommit({ stepNum, stepName, taskName, cwd }) {
   if (metaFiles.length > 0) {
     await git(['add', ...metaFiles], cwd);
     await git(
-      [
-        'commit',
-        '-m',
-        `chore(runway): update ${taskName} step ${stepNum} status`,
-      ],
+      ['commit', '-m', `chore(${taskName}): step ${stepNum} output`],
       cwd
     );
   }

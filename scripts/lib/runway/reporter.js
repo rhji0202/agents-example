@@ -1,4 +1,5 @@
 import { readFile, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 
 /**
  * index.json 읽기/쓰기 + 상태 리포팅 유틸리티.
@@ -50,39 +51,29 @@ export async function markStepStarted(indexPath, stepNum) {
 }
 
 /**
- * Step 완료 기록
+ * Step 완료 기록.
+ * Claude가 이미 index.json에 status/summary를 기록했으므로
+ * 그 데이터를 기반으로 completed_at 타임스탬프만 추가한다.
  */
 export async function markStepCompleted(indexPath, stepNum) {
   const data = await readJson(indexPath);
   const step = data.steps.find((s) => s.step === stepNum);
   if (step) {
     step.completed_at = now();
-    // summary는 Claude 세션이 이미 기록했으므로 다시 읽기
-    const freshData = await readJson(indexPath);
-    const freshStep = freshData.steps.find((s) => s.step === stepNum);
-    if (freshStep && freshStep.status === 'completed') {
-      step.status = 'completed';
-      step.summary = freshStep.summary;
-    }
-    await writeJson(indexPath, data);
   }
+  await writeJson(indexPath, data);
   return data;
 }
 
 /**
- * Step 에러 기록
+ * Step 에러 기록.
+ * Claude가 error_message를 남겼으면 그대로 유지하고 타임스탬프만 추가한다.
  */
 export async function markStepError(indexPath, stepNum) {
   const data = await readJson(indexPath);
   const step = data.steps.find((s) => s.step === stepNum);
   if (step) {
     step.failed_at = now();
-    // error_message는 Claude 세션이 이미 기록
-    const freshData = await readJson(indexPath);
-    const freshStep = freshData.steps.find((s) => s.step === stepNum);
-    if (freshStep && freshStep.error_message) {
-      step.error_message = freshStep.error_message;
-    }
     step.status = 'error';
     await writeJson(indexPath, data);
   }
@@ -90,22 +81,39 @@ export async function markStepError(indexPath, stepNum) {
 }
 
 /**
- * Step blocked 기록
+ * Step blocked 기록.
+ * Claude가 blocked_reason을 남겼으면 그대로 유지하고 타임스탬프만 추가한다.
  */
 export async function markStepBlocked(indexPath, stepNum) {
   const data = await readJson(indexPath);
   const step = data.steps.find((s) => s.step === stepNum);
   if (step) {
-    step.blocked_at = now();
-    const freshData = await readJson(indexPath);
-    const freshStep = freshData.steps.find((s) => s.step === stepNum);
-    if (freshStep && freshStep.blocked_reason) {
-      step.blocked_reason = freshStep.blocked_reason;
-    }
     step.status = 'blocked';
+    step.blocked_at = now();
     await writeJson(indexPath, data);
   }
   return data;
+}
+
+/**
+ * 실행 전 기존 error/blocked step이 있는지 확인.
+ * 발견 시 안내 메시지와 함께 즉시 종료한다.
+ */
+export function checkBlockers(data) {
+  for (const s of data.steps) {
+    if (s.status === 'error') {
+      console.error(`\n  ✗ Step ${s.step} (${s.name}) failed.`);
+      console.error(`  Error: ${s.error_message ?? 'unknown'}`);
+      console.error(`  Fix and reset status to 'pending' to retry.\n`);
+      process.exit(1);
+    }
+    if (s.status === 'blocked') {
+      console.error(`\n  ⏸ Step ${s.step} (${s.name}) blocked.`);
+      console.error(`  Reason: ${s.blocked_reason ?? 'unknown'}`);
+      console.error(`  Resolve and reset status to 'pending' to retry.\n`);
+      process.exit(2);
+    }
+  }
 }
 
 /**
@@ -117,7 +125,7 @@ export async function updatePhaseStatus(phasesIndexPath, taskName) {
   if (!phase) return;
 
   // task index.json 읽기
-  const taskDir = phasesIndexPath.replace('index.json', `${taskName}/index.json`);
+  const taskDir = join(dirname(phasesIndexPath), taskName, 'index.json');
   let taskData;
   try {
     taskData = await readJson(taskDir);

@@ -20,6 +20,7 @@ import {
   printStatus,
   markTaskStarted,
   updatePhaseStatus,
+  checkBlockers,
 } from './lib/runway/reporter.js';
 
 const PROJECT_ROOT = resolve(import.meta.dirname, '..');
@@ -93,6 +94,11 @@ async function main() {
   const stepIdx = args.indexOf('--step');
   const singleStep = stepIdx !== -1 ? parseInt(args[stepIdx + 1], 10) : undefined;
 
+  if (singleStep !== undefined && Number.isNaN(singleStep)) {
+    console.error(`\n  --step requires a numeric argument. Got: ${args[stepIdx + 1] ?? '(nothing)'}\n`);
+    process.exit(1);
+  }
+
   // task 디렉토리 확인
   const taskDir = join(PHASES_DIR, taskName);
   const indexPath = join(taskDir, 'index.json');
@@ -107,6 +113,9 @@ async function main() {
   console.log(`\n  === Runway: ${taskName} ===`);
   const branch = await ensureBranch(taskName, PROJECT_ROOT);
   console.log(`  Branch: ${branch}`);
+
+  // 기존 error/blocked step 확인
+  checkBlockers(await readJson(indexPath));
 
   // task 시작 기록
   await markTaskStarted(indexPath);

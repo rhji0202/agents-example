@@ -27,9 +27,12 @@ $ARGUMENTS가 비어 있으면 사용자에게 task 이름을 물어본다.
 2. `/docs/ARCHITECTURE.md` — 시스템 구조, Tech Stack, API 규칙, 디렉토리 구조
 3. `/docs/PERMISSIONS.md` — 역할별 권한 매트릭스
 4. `/docs/UI-GUIDE.md` — 디자인 원칙, 색상, 컴포넌트
-5. `/CLAUDE.md` — 프로젝트 규칙, 커맨드
+5. `/docs/specs/*.md` — 기능별 상세 스펙 문서 (존재 시)
+6. `/CLAUDE.md` — 프로젝트 규칙, 커맨드
 
 기존 `docs/phases/` 하위에 이미 생성된 phase가 있으면 현황을 파악한다.
+
+`docs/specs/` 하위에 스펙 문서가 있으면 task와 관련된 스펙을 파악한다.
 
 프론트엔드 관련 작업이면 `docs/ui/` 하위의 UI 스펙도 확인한다.
 
@@ -148,6 +151,9 @@ $ARGUMENTS가 비어 있으면 사용자에게 task 이름을 물어본다.
 파일 생성 후 사용자에게 실행 커맨드를 안내한다:
 
 ```bash
+# /runway-run 커맨드 또는 직접 실행:
 node scripts/runway.js {task-name}          # 순차 실행
 node scripts/runway.js {task-name} --push   # 실행 후 push
 ```
+
+> 이 스킬은 **설계만** 담당한다. 실행은 `/runway-run` 또는 `node scripts/runway.js`로 별도 수행한다.

@@ -56,6 +56,7 @@ Backend port: `process.env.PORT ?? 8080`.
 | docs/ARCHITECTURE.md | 시스템 구조, Tech Stack, API 규칙, DB 전략, 보안, 디렉토리 구조 |
 | docs/PERMISSIONS.md  | 역할별 권한 매트릭스                                            |
 | docs/UI-GUIDE.md     | 디자인 원칙, 색상, 컴포넌트, 타이포그래피                       |
+| docs/specs/          | 기능별 상세 스펙 문서 (runway 실행 시 guardrails에 자동 포함)    |
 | docs/ui/{page}-ui.md | 페이지별 UI/UX 스펙 (`/ui-spec {page}`로 생성)                  |
 | docs/phases/         | 구현 phase 관리 (`/runway`로 설계, `runway.js`로 실행)           |
 

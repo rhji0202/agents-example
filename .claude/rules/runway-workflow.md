@@ -3,13 +3,18 @@
 ## Phase 파일 구조
 
 ```
-docs/phases/
-├── index.json                      # 전체 phase 현황
-└── {task-name}/
-    ├── index.json                  # task 상세 (step 목록, 상태)
-    ├── step0.md                    # Step 0 실행 지시
-    ├── step1.md                    # Step 1 실행 지시
-    └── ...
+docs/
+├── specs/                          # 기능별 상세 스펙 문서
+│   └── {feature}-spec.md           # context.js가 guardrails에 자동 포함
+├── ui/                             # 페이지별 UI 스펙 (/ui-spec으로 생성)
+│   └── {page}-ui.md                # step.md "읽어야 할 파일"에서 참조
+└── phases/
+    ├── index.json                  # 전체 phase 현황
+    └── {task-name}/
+        ├── index.json              # task 상세 (step 목록, 상태)
+        ├── step0.md                # Step 0 실행 지시
+        ├── step1.md                # Step 1 실행 지시
+        └── ...
 ```
 
 ## index.json 스키마
@@ -66,6 +71,11 @@ docs/phases/
 - 외부 대화 참조 금지: "이전에 논의한 바와 같이" 등 사용 금지
 - 필요한 모든 정보를 파일 안에 포함
 - 이전 step의 산출물은 파일 경로로 참조
+
+## 스펙 문서 연동
+
+`docs/specs/` 하위의 스펙 문서는 `context.js`의 `buildGuardrails()`에 의해 실행 컨텍스트에 자동 포함된다.
+task와 관련된 스펙이 있으면 step의 "읽어야 할 파일"에도 명시적으로 포함한다.
 
 ## UI 스펙 연동
 
