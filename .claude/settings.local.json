@@ -45,7 +45,10 @@
       "Bash(grep -E \"\\\\.\\(md|json|yaml\\)$\")",
       "Bash(grep -E \"\\\\.md$\")",
       "Bash(find \"E:\\\\project\\\\codebuddy-app\" -type f \\\\\\( -name \"*.js\" -o -name \"*.ts\" \\\\\\) -exec grep -l \"generate.*html\\\\|preview\\\\|HTML\" {} \\\\;)",
-      "Bash(start:*)"
+      "Bash(start:*)",
+      "Bash(mkdir -p /Users/ho/Sites/agents-example/.claude/skills/runway)",
+      "Bash(mkdir -p /Users/ho/Sites/agents-example/.claude/skills/ui-spec)",
+      "Bash(mkdir -p /Users/ho/Sites/agents-example/scripts/lib/runway)"
     ]
   },
   "spinnerTipsEnabled": true
